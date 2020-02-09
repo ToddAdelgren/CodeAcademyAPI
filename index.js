@@ -32,7 +32,7 @@ document.getElementById('sign-in').addEventListener('click', function (e) {
         if (fieldIsValid(password, 'password')) {
             var signIn = { emailAddress: emailAddress, password: password };
             if (signInMgr.signInIsValid(signIn)) {
-                console.log('GO TO THE NEXT PAGE');
+                window.location.href = 'main.html';
             }
             else {
                 document.getElementById('message').classList.remove('d-none');

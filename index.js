@@ -11,20 +11,33 @@ var SignInMgr = /** @class */ (function () {
         this.signIns.forEach(function (element) { return console.log(element); });
     };
     SignInMgr.prototype.signInIsValid = function (signIn) {
-        for (var i = 0; i <= this.signIns.length; i++) {
-            if (this.signIns[i].emailAddress === signIn.emailAddress) { }
+        var retValue = false;
+        for (var i = 0; i < this.signIns.length; i++) {
+            if (this.signIns[i].emailAddress === signIn.emailAddress) {
+                if (this.signIns[i].password === signIn.password) {
+                    retValue = true;
+                }
+            }
         }
-        return true;
+        return retValue;
     };
     return SignInMgr;
 }());
 document.getElementById('sign-in').addEventListener('click', function (e) {
     e.preventDefault();
+    document.getElementById('message').classList.add('d-none');
     var emailAddress = document.getElementById('email-address').value.trim();
     if (fieldIsValid(emailAddress, 'email-address')) {
         var password = document.getElementById('password').value.trim();
         if (fieldIsValid(password, 'password')) {
-            console.log('THE FIELDS ARE VALID');
+            var signIn = { emailAddress: emailAddress, password: password };
+            if (signInMgr.signInIsValid(signIn)) {
+                console.log('GO TO THE NEXT PAGE');
+            }
+            else {
+                document.getElementById('message').classList.remove('d-none');
+                document.getElementById('email-address').focus();
+            }
         }
     }
 });
@@ -55,5 +68,4 @@ function fieldIsValid(enteredValue, elementId) {
     }
 }
 var signInMgr = new SignInMgr();
-signInMgr.showAll();
 document.getElementById('email-address').focus();

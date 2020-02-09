@@ -15,21 +15,33 @@ class SignInMgr {
         this.signIns.forEach(element => console.log(element));
     }
     signInIsValid(signIn: SignIn): boolean {
-        for (let i: number = 0; i <= this.signIns.length; i++){
-            if (this.signIns[i].emailAddress === signIn.emailAddress){}
+        let retValue: boolean = false;
+        for (let i: number = 0; i < this.signIns.length; i++){
+            if (this.signIns[i].emailAddress === signIn.emailAddress){
+                if (this.signIns[i].password === signIn.password){
+                    retValue = true;
+                }
+            }
         } 
-        return true;
+        return retValue;
         
     }
 }
 
 document.getElementById('sign-in').addEventListener('click', function(e){
     e.preventDefault();
+    document.getElementById('message').classList.add('d-none');
     let emailAddress: string = (<HTMLInputElement>document.getElementById('email-address')).value.trim();
     if (fieldIsValid(emailAddress, 'email-address')){
         let password: string = (<HTMLInputElement>document.getElementById('password')).value.trim();
         if (fieldIsValid(password, 'password')){
-            console.log('THE FIELDS ARE VALID');
+            let signIn: SignIn = {emailAddress: emailAddress, password: password};
+            if (signInMgr.signInIsValid(signIn)){
+                console.log('GO TO THE NEXT PAGE');
+            } else {
+                document.getElementById('message').classList.remove('d-none');
+                document.getElementById('email-address').focus();
+            }
         }
     }
 })
@@ -61,7 +73,6 @@ function fieldIsValid(enteredValue: string, elementId: string): boolean {
 }
 
 let signInMgr = new SignInMgr();
-signInMgr.showAll();
 
 document.getElementById('email-address').focus();
 

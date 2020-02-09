@@ -1,33 +1,67 @@
+interface SignIn {
+    emailAddress: string;
+    password: string;
+}
+
+// SignInMgr handles functionality related to sign ins to the website.
+class SignInMgr {
+    signIns: SignIn[] = [
+                            {emailAddress: 'todd@example.com', password: 'todd'},
+                            {emailAddress: 'mike@example.com', password: 'mike'},
+                            {emailAddress: 'test@example.com', password: 'test'}
+                        ];
+    constructor() {}
+    showAll(): void {
+        this.signIns.forEach(element => console.log(element));
+    }
+    signInIsValid(signIn: SignIn): boolean {
+        for (let i: number = 0; i <= this.signIns.length; i++){
+            if (this.signIns[i].emailAddress === signIn.emailAddress){}
+        } 
+        return true;
+        
+    }
+}
+
 document.getElementById('sign-in').addEventListener('click', function(e){
-
     e.preventDefault();
-
     let emailAddress: string = (<HTMLInputElement>document.getElementById('email-address')).value.trim();
-
     if (fieldIsValid(emailAddress, 'email-address')){
-
         let password: string = (<HTMLInputElement>document.getElementById('password')).value.trim();
-
         if (fieldIsValid(password, 'password')){
-
             console.log('THE FIELDS ARE VALID');
         }
     }
 })
 
-document.getElementById('email-address').focus();
+document.getElementById('signin-help').addEventListener('click', function(e){
+    let signIns = document.getElementById('sign-ins');
+    if (signIns.classList.contains('d-none')){
+        // Show the sign ins.
+        signIns.classList.remove('d-none');
+        (<HTMLInputElement>e.target).innerText = 'Close Sign In Help';
+    } else {
+        // Hide the sign ins.
+        signIns.classList.add('d-none');
+        (<HTMLInputElement>e.target).innerText = 'Sign In Help';
+    }
+})
 
 function fieldIsValid(enteredValue: string, elementId: string): boolean {
-
     if (enteredValue.length === 0){
-
+        // Data in the field is invalid.
         document.getElementById(elementId).classList.add('is-invalid');
         document.getElementById(elementId).focus();
         return false;
-
     } else {
-
+        // Data in the field is valid.
         document.getElementById(elementId).classList.remove('is-invalid');
         return true;
     }
 }
+
+let signInMgr = new SignInMgr();
+signInMgr.showAll();
+
+document.getElementById('email-address').focus();
+

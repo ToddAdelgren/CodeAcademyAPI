@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
+        a:link, a:hover {
+            text-decoration: underline !important;
+        }
         .mw-300 {
             max-width: 300px;
         }
@@ -30,8 +33,19 @@
                     Please enter Password
                 </div>
             </div>
-            <button type="submit" id="sign-in" class="btn btn-primary float-right">Sign In</button>
+            <div class="clearfix">
+                <button type="submit" id="sign-in" class="btn btn-primary clearfix float-right mb-2">Sign In</button>
+            </div>
+            <div class="clearfix">
+                <a class="nav-link float-right px-0" id="signin-help" href="#">Sign In Help</a>
+            </div>
         </form>
+        <section class="mw-300 mx-auto d-none" id="sign-ins">
+            Use one of the following:<br>
+            Email: todd@example.com Password: todd<br>
+            Email: mike@example.com Password: mike<br>
+            Email: test@example.com Password: test
+        </section>
     </main>
 </body>
 <script type="text/javascript" src="index.js"></script>

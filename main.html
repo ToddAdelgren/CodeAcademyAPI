@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
+        .clear-both {
+            clear: both;
+        }
         .mw-300 {
             max-width: 300px;
         }
@@ -22,21 +25,26 @@
                 <div class="form-group">
                     <label for="search-type">Search Type</label>
                     <select class="form-control" id="search-type">
-                        <option value="drink">Drink Name</option>
-                        <option value="ingredient">Ingredient Name</option>
+                        <option value="search.php?s=">Drinks Buy Name</option>
+                        <option value="filter.php?i=">Ingredients By Name</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="search-string">Search For</label>
-                    <input type="text" class="form-control" id="search-string" aria-describedby="search-for-help" placeholder="name@example.com">
+                    <input type="text" class="form-control" id="search-string" aria-describedby="search-for-help" placeholder="Example: margarita">
                     <div class="invalid-feedback">
                         Please enter Search For
                     </div>
                 </div>
                 <div>
-                    <button type="submit" id="search-btn" class="btn btn-primary clearfix float-right mb-2">Search</button>
+                    <button type="submit" id="search-btn" class="btn btn-primary clearfix float-right mb-3">Search</button>
                 </div>
                 </form>
+        </section>
+        <section id="no-search-results" class="clear-both d-none mw-300 mx-auto text-danger">
+            No Drinks Found
+        </section>
+        <section id="search-results" class="clear-both d-none mw-300 mx-auto mb-3">
         </section>
     </main>
 </body>

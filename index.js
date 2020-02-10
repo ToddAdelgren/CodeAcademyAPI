@@ -32,6 +32,7 @@ document.getElementById('sign-in').addEventListener('click', function (e) {
         if (fieldIsValid(password, 'password')) {
             var signIn = { emailAddress: emailAddress, password: password };
             if (signInMgr.signInIsValid(signIn)) {
+                localStorage.setItem('emailaddress', emailAddress);
                 window.location.href = 'main.html';
             }
             else {

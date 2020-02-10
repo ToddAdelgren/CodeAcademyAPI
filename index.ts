@@ -37,6 +37,7 @@ document.getElementById('sign-in').addEventListener('click', function(e){
         if (fieldIsValid(password, 'password')){
             let signIn: SignIn = {emailAddress: emailAddress, password: password};
             if (signInMgr.signInIsValid(signIn)){
+                localStorage.setItem('emailaddress', emailAddress);
                 window.location.href = 'main.html';
             } else {
                 document.getElementById('message').classList.remove('d-none');

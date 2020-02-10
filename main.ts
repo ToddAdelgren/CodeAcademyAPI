@@ -1,5 +1,7 @@
 let ingredient: string[] = [];
 
+document.getElementById('signed-in').innerHTML = localStorage.emailaddress;
+
 document.getElementById('sign-out').addEventListener('click', function(e){
     e.preventDefault();
     window.location.href = 'index.html';

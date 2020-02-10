@@ -68,7 +68,7 @@ function processEndPoint1(jsonObj) {
         // Add the name div to the drink div.
         var nameDiv = document.createElement('div');
         nameDiv.style.borderBottom = '1px solid black';
-        nameDiv.classList.add('mb-3');
+        nameDiv.classList.add('name-div', 'mb-3');
         nameDiv.innerText = 'Drink: ' + jsonObj.drinks[i].strDrink;
         drinkDiv.append(nameDiv);
         // Add the ingredients to the drink div.

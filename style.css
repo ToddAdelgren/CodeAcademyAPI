@@ -7,3 +7,6 @@ a:link, a:hover {
 .mw-300 {
     max-width: 300px;
 }
+.drink-div:hover {
+    transform: scale(1.1);
+}

@@ -1,4 +1,8 @@
 var ingredient = [];
+document.getElementById('sign-out').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = 'index.html';
+});
 document.getElementById('search-btn').addEventListener('click', function (e) {
     e.preventDefault();
     // Remove any previous no-search-results.

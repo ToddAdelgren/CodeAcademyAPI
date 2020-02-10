@@ -1,5 +1,15 @@
 var ingredient = [];
 document.getElementById('signed-in').innerHTML = localStorage.emailaddress;
+document.getElementById('search-type').addEventListener('change', function (e) {
+    var element = document.getElementById('search-string');
+    element.value = '';
+    if (e.target.options[e.target.selectedIndex].text === 'Drinks By Name') {
+        element.placeholder = 'Example: margarita';
+    }
+    else {
+        element.placeholder = 'Example: rum';
+    }
+});
 document.getElementById('sign-out').addEventListener('click', function (e) {
     e.preventDefault();
     window.location.href = 'index.html';

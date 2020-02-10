@@ -2,6 +2,16 @@ let ingredient: string[] = [];
 
 document.getElementById('signed-in').innerHTML = localStorage.emailaddress;
 
+document.getElementById('search-type').addEventListener('change', function(e){
+    let element = document.getElementById('search-string');
+    (<HTMLInputElement>element).value = '';
+    if ((<HTMLSelectElement>e.target).options[(<HTMLSelectElement>e.target).selectedIndex].text === 'Drinks By Name'){
+        (<HTMLInputElement>element).placeholder = 'Example: margarita';
+    } else {
+        (<HTMLInputElement>element).placeholder = 'Example: rum';
+    }
+});
+
 document.getElementById('sign-out').addEventListener('click', function(e){
     e.preventDefault();
     window.location.href = 'index.html';

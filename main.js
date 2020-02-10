@@ -11,32 +11,48 @@ document.getElementById('search-btn').addEventListener('click', function (e) {
     var searchString = document.getElementById('search-string').value.trim();
     if (fieldIsValid(searchString, 'search-string')) {
         var searchType = document.getElementById('search-type').value;
-        var xhr_1 = new XMLHttpRequest();
-        xhr_1.open("GET", "https://www.thecocktaildb.com/api/json/v1/1/" +
-            searchType +
-            searchString, true);
-        xhr_1.onreadystatechange = function () {
-            if (xhr_1.readyState === 4 && xhr_1.status === 200) {
-                var jsonObj = JSON.parse(xhr_1.responseText);
+        xhrProcessing(searchType, searchString);
+    }
+});
+function xhrProcessing(searchType, searchString) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://www.thecocktaildb.com/api/json/v1/1/" +
+        searchType +
+        searchString, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            if (xhr.responseText === '') {
+                // API Endpoint 2 & 3 do not return anything if no drinks are found.
+                document.getElementById('no-search-results').classList.remove('d-none');
+                // Return here to prevent JSON.parse error.
+                return;
+            }
+            var jsonObj = JSON.parse(xhr.responseText);
+            // API Endpoint 1
+            if (searchType === 'search.php?s=' || searchType === 'lookup.php?i=') {
                 if (jsonObj.drinks == null) {
                     // No drinks found.
                     document.getElementById('no-search-results').classList.remove('d-none');
                 }
                 else {
                     // Drinks found.
-                    processResults(jsonObj);
+                    processEndPoint1(jsonObj);
                 }
             }
             else {
-                if (xhr_1.status >= 400) {
-                    console.log('UNEXPECTED HTTP RETURN CODE');
-                }
+                // API Endpoint 2, drinks found.
+                processEndPoint2(jsonObj);
             }
-        };
-        xhr_1.send();
-    }
-});
-function processResults(jsonObj) {
+        }
+        else {
+            if (xhr.status >= 400) {
+                console.log('UNEXPECTED HTTP RETURN CODE');
+            }
+        }
+    };
+    xhr.send();
+}
+function processEndPoint1(jsonObj) {
     var searchResultsDiv = document.getElementById('search-results');
     searchResultsDiv.classList.remove('d-none');
     for (var i = 0; i < jsonObj.drinks.length; i++) {
@@ -187,6 +203,33 @@ function processResults(jsonObj) {
         instructDiv.innerHTML = instructDiv.innerHTML + jsonObj.drinks[i].strInstructions;
         instructDiv.innerHTML = instructDiv.innerHTML + '<br><br>';
         drinkDiv.append(instructDiv);
+    }
+}
+function processEndPoint2(jsonObj) {
+    var searchResultsDiv = document.getElementById('search-results');
+    searchResultsDiv.classList.remove('d-none');
+    for (var i = 0; i < jsonObj.drinks.length; i++) {
+        // Add drink div to the search results div.
+        var drinkDiv = document.createElement('div');
+        drinkDiv.classList.add('drink-div');
+        searchResultsDiv.append(drinkDiv);
+        // Add the name div to the drink div.
+        var nameDiv = document.createElement('div');
+        nameDiv.classList.add('mb-3');
+        nameDiv.innerHTML = 'Drink: <a class="drink-link" href="' + jsonObj.drinks[i].idDrink + '">' + jsonObj.drinks[i].strDrink + '</a>';
+        drinkDiv.append(nameDiv);
+    }
+    var drinkLink = document.querySelectorAll('.drink-link');
+    for (var i = 0; i < drinkLink.length; i++) {
+        drinkLink[i].addEventListener('click', function (e) {
+            e.preventDefault();
+            // Remove any previous drink divs.
+            var drinkDivs = document.querySelectorAll(".drink-div");
+            for (var i_1 = 0; i_1 < drinkDivs.length; i_1++) {
+                drinkDivs[i_1].remove();
+            }
+            xhrProcessing('lookup.php?i=', e.target.getAttribute('href'));
+        });
     }
 }
 function fieldIsValid(enteredValue, elementId) {

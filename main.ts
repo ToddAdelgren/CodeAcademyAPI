@@ -17,38 +17,55 @@ document.getElementById('search-btn').addEventListener('click', function(e){
     if (fieldIsValid(searchString, 'search-string')){
         let searchType: string = (<HTMLInputElement>document.getElementById('search-type')).value;
 
-        let xhr = new XMLHttpRequest();
+        xhrProcessing(searchType, searchString);
+    }
+});
 
-        xhr.open(
-            "GET",
-            "https://www.thecocktaildb.com/api/json/v1/1/" +
-            searchType +
-            searchString,
-            true
-        );
+function xhrProcessing(searchType: string, searchString: string): void {
+    let xhr = new XMLHttpRequest();
 
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                let jsonObj = JSON.parse(xhr.responseText);
+    xhr.open(
+        "GET",
+        "https://www.thecocktaildb.com/api/json/v1/1/" +
+        searchType +
+        searchString,
+        true
+    );
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            if (xhr.responseText === ''){
+                // API Endpoint 2 & 3 do not return anything if no drinks are found.
+                document.getElementById('no-search-results').classList.remove('d-none');
+                // Return here to prevent JSON.parse error.
+                return;
+            }
+            let jsonObj = JSON.parse(xhr.responseText);
+            // API Endpoint 1
+            if (searchType === 'search.php?s=' || searchType === 'lookup.php?i='){
                 if (jsonObj.drinks == null){
                     // No drinks found.
                     document.getElementById('no-search-results').classList.remove('d-none');
                 } else {
                     // Drinks found.
-                    processResults(jsonObj);
+                    processEndPoint1(jsonObj);
                 }
             } else {
-                if (xhr.status >= 400) {
-                    console.log('UNEXPECTED HTTP RETURN CODE');
-                }
+                // API Endpoint 2, drinks found.
+                processEndPoint2(jsonObj);
             }
-        };
+        } else {
+            if (xhr.status >= 400) {
+                console.log('UNEXPECTED HTTP RETURN CODE');
+            }
+        }
+    };
 
-        xhr.send();
-    }
-});
+    xhr.send();
 
-function processResults(jsonObj: any): void {
+}
+
+function processEndPoint1(jsonObj: any): void {
     let searchResultsDiv = document.getElementById('search-results');
     searchResultsDiv.classList.remove('d-none');
     for (let i: number = 0; i < jsonObj.drinks.length; i++){
@@ -187,6 +204,39 @@ function processResults(jsonObj: any): void {
         instructDiv.innerHTML = instructDiv.innerHTML + jsonObj.drinks[i].strInstructions;
         instructDiv.innerHTML = instructDiv.innerHTML + '<br><br>';
         drinkDiv.append(instructDiv);
+    }
+}
+
+function processEndPoint2(jsonObj: any): void {
+    let searchResultsDiv = document.getElementById('search-results');
+    searchResultsDiv.classList.remove('d-none');
+
+    for (let i: number = 0; i < jsonObj.drinks.length; i++){
+        // Add drink div to the search results div.
+        let drinkDiv = document.createElement('div');
+        drinkDiv.classList.add('drink-div');
+        searchResultsDiv.append(drinkDiv);
+
+        // Add the name div to the drink div.
+        let nameDiv = document.createElement('div');
+        nameDiv.classList.add('mb-3');
+        nameDiv.innerHTML = 'Drink: <a class="drink-link" href="'+jsonObj.drinks[i].idDrink+'">'+jsonObj.drinks[i].strDrink+'</a>';
+        drinkDiv.append(nameDiv);
+    }
+
+    let drinkLink = document.querySelectorAll('.drink-link');
+    for (let i:number = 0; i < drinkLink.length; i++){
+        drinkLink[i].addEventListener('click', function(e){
+            e.preventDefault();
+
+            // Remove any previous drink divs.
+            let drinkDivs = document.querySelectorAll(".drink-div");
+            for (let i: number = 0; i < drinkDivs.length; i++) {
+                drinkDivs[i].remove();
+            }
+
+            xhrProcessing('lookup.php?i=', (<HTMLInputElement>e.target).getAttribute('href'))
+        })
     }
 }
 
